@@ -20,7 +20,7 @@ import UnauthPage from './pages/unauth'
 
 const App = () => {
 
-  const isAuthenticated = true ;
+  const isAuthenticated = false ;
   const user = {
     name : "daniyal",
     role : "admin"

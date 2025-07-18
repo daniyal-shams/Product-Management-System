@@ -3,7 +3,6 @@ import jwt from  'jsonwebtoken' ;
 import User from '../../models/User.js';
 
 
-
 // register 
 const registerUser = async(req, res) => {
     const {userName, email, password} = req.body ;
@@ -63,16 +62,21 @@ const loginUser = async(req, res)=> {
         console.log(e);
         res.status(500).json({
             success : false ,
-            message : "Some error occured"
+            message : "Some error occurred"
         })
     }
 }
 
 //logout
-
+const logout = (req, res) => {
+    res.clearCookie('token').json({
+        success : true,
+        message : "Logged Out Successfully!"
+    })
+}
 
 
 // auth middleware
 
 
-export { registerUser, loginUser } ;
+export { registerUser, loginUser, logout } ;

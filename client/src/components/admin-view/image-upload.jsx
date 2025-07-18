@@ -4,10 +4,11 @@ import { useEffect, useRef } from "react";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import axios from "axios";
+import { Skeleton } from "../ui/skeleton";
 
 
 
-function ProductImageUpload({imgFile, setImgFile , uploadedImgUrl, setUploadedImgUrl, setImgLoadingState} ) {
+function ProductImageUpload({imgFile, setImgFile , uploadedImgUrl, setUploadedImgUrl, imgLoadingState, setImgLoadingState} ) {
 
     const inputRef = useRef(null);
 
@@ -48,7 +49,7 @@ function ProductImageUpload({imgFile, setImgFile , uploadedImgUrl, setUploadedIm
     }
 
     useEffect(()=> {
-        if(imgFile !== null) uploadImgToCloud() 
+        if(imgFile !== null) uploadImgToCloud() ;
     },[imgFile]);
 
     return ( 
@@ -62,6 +63,7 @@ function ProductImageUpload({imgFile, setImgFile , uploadedImgUrl, setUploadedIm
                         <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
                         <span>Drag & drop or click to upload image</span>
                     </Label> : (
+                        imgLoadingState ? <Skeleton className={"h-10 bg-gray=100"} /> : (
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <FileIcon className="w-8 text-primary mr-2 h-8"/>
@@ -71,7 +73,7 @@ function ProductImageUpload({imgFile, setImgFile , uploadedImgUrl, setUploadedIm
                             <XIcon className="w-4 h-4" />
                             <span className="sr-only">Remove File</span>
                         </Button>
-                        </div>) 
+                        </div> )) 
                     }
             </div>
         </div>

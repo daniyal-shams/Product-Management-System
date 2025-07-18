@@ -3,7 +3,10 @@ import CommonForm from "@/components/common/form";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config";
-import { Fragment, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import {  createProduct, fetchAllProducts } from "@/store/admin/products-slice";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const initialFormData = {
@@ -24,10 +27,35 @@ function AdminProducts() {
     const [imgFile, setImgFile] = useState(null);
     const [uploadedImgUrl, setUploadedImgUrl] = useState(''); 
     const [imgLoadingState, setImgLoadingState] = useState(false);
+    const {productList} = useSelector(state=>state.adminProducts)
+    const dispatch = useDispatch();
+    const {toast} = useToast();
 
-    function onSubmit() {
-        return ''
+    function onSubmit(event) {
+        event.preventDefault();
+        dispatch(createProduct({
+            ...formData,
+            image : uploadedImgUrl,
+        })).then((data)=>{
+            console.log(data);
+            if(data?.payload?.success) {
+                dispatch(fetchAllProducts());
+                setOpenCreateProductDialog(false)
+                setImgFile(null);
+                setFormData(initialFormData);
+                toast({
+                    title : 'Product add successfully'
+                })
+            }
+            
+        })
     }
+
+    useEffect(()=>{
+        dispatch(fetchAllProducts());
+    },[dispatch]);
+
+    console.log(productList,uploadedImgUrl , "Product List")
 
     return ( 
         <Fragment>
@@ -50,6 +78,7 @@ function AdminProducts() {
                         uploadedImgUrl={uploadedImgUrl}
                         setUploadedImgUrl={setUploadedImgUrl}
                         setImgLoadingState={setImgLoadingState}
+                        imgLoadingState={imgLoadingState}
                         />
                     <div className="py-6">
                         <CommonForm 
